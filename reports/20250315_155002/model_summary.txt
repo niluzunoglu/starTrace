@@ -1,0 +1,38 @@
+Model Yapısı:
+Hidden Layer Sizes: (128, 64)
+Activation Function: relu
+Solver: adam
+Learning Rate: adaptive
+Learning Rate Init: 0.001
+Max Iterations: 500
+
+Son Epoch Train Seti Doğruluğu: 0.7764492753623189
+
+Son Epoch Test Seti Doğruluğu: 0.717001629549158
+Test Seti Sınıflandırma Raporu:
+              precision    recall  f1-score   support
+
+           0       0.50      0.34      0.41       406
+           1       0.67      0.85      0.75       548
+           2       0.83      0.81      0.82       887
+
+    accuracy                           0.72      1841
+   macro avg       0.66      0.67      0.66      1841
+weighted avg       0.71      0.72      0.71      1841
+
+
+Son Epoch Validation Seti Doğruluğu: 0.7086956521739131
+Validation Seti Sınıflandırma Raporu:
+              precision    recall  f1-score   support
+
+           0       0.35      0.26      0.30       344
+           1       0.69      0.84      0.76       573
+           2       0.83      0.79      0.81       923
+
+    accuracy                           0.71      1840
+   macro avg       0.62      0.63      0.62      1840
+weighted avg       0.70      0.71      0.70      1840
+
+Test Size: 0.2
+Validation Size: 0.2
+Random State: 42

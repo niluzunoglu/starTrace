@@ -1,0 +1,36 @@
+Model Yapısı:
+Hidden Layer Sizes: (128, 64)
+Activation Function: relu
+Solver: adam
+Learning Rate: adaptive
+Learning Rate Init: 0.001
+Max Iterations: 500
+
+Test Seti Doğruluğu: 0.7007061379684953
+Test Seti Sınıflandırma Raporu:
+              precision    recall  f1-score   support
+
+           0       0.51      0.19      0.28       406
+           1       0.66      0.83      0.74       548
+           2       0.76      0.85      0.80       887
+
+    accuracy                           0.70      1841
+   macro avg       0.64      0.63      0.61      1841
+weighted avg       0.67      0.70      0.67      1841
+
+
+Validation Seti Doğruluğu: 0.7092391304347826
+Validation Seti Sınıflandırma Raporu:
+              precision    recall  f1-score   support
+
+           0       0.34      0.16      0.22       344
+           1       0.68      0.84      0.75       573
+           2       0.79      0.84      0.81       923
+
+    accuracy                           0.71      1840
+   macro avg       0.60      0.61      0.59      1840
+weighted avg       0.67      0.71      0.68      1840
+
+Test Size: 0.2
+Validation Size: 0.2
+Random State: 42
