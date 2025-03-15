@@ -9,7 +9,7 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
 
 ## Veri Seti
 
-*   **Kaynak:** NASA Exoplanet Archive ([https://exoplanetarchive.ipac.caltech.edu/](https://exoplanetarchive.ipac.caltech.edu/))
+*   **Kaynak:** NASA Exoplanet Archive ([https://exoplanetarchive.ipac.caltech.edu/](https://exoplanetarchive.ipac.caltech.edu/)) adresinde bulunan Kepler KOI tablosu.
 *   **Veri Tipi:** Işık eğrisi verileri (Zaman serisi)
 *   **Özellikler:** Proje, ham ışık eğrisi verilerinden çıkarılan çeşitli özellikleri kullanabilir. Bu özellikler şunları içerebilir:
     *   Akı (Flux) değerleri
@@ -20,18 +20,9 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
 
 ## Kullanılan Teknolojiler
 
-*   **Programlama Dili:** Python
-*   **Makine Öğrenimi Kütüphaneleri:**
-    *   scikit-learn
-    *   TensorFlow / Keras (Opsiyonel)
-    *   LightGBM / XGBoost (Opsiyonel)
-*   **Veri Manipülasyonu ve Görselleştirme:**
-    *   pandas
-    *   numpy
-    *   matplotlib
-    *   seaborn
-*   **Diğer:**
-    *   Jupyter Notebook (Geliştirme ve Deney için)
+*   Proje **Python** ile geliştirilmiştir. 
+*   Derin öğrenme metodları **sci-kit learn** kütüphanesi üzerinde gerçekleştirilmiştir.
+*   Veri manipülasyonu ve görselleştirme işlemleri **pandas, numpy, matplotlib ve seaborn** kütüphaneleri kullanılarak gerçekleştirilmiştir.
 
 ## Proje Yapısı
 
@@ -90,22 +81,6 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
     python src/model_training.py  # Modeli eğitin
     python src/evaluation.py    # Modeli değerlendirin
     ```
-
-## Katkıda Bulunma
-
-Projeye katkıda bulunmak isterseniz, lütfen aşağıdaki adımları izleyin:
-
-1.  **Fork edin:** Depoyu kendi GitHub hesabınıza fork edin.
-2.  **Branch oluşturun:** Yeni bir özellik veya düzeltme için bir branch oluşturun.
-3.  **Değişikliklerinizi yapın:** Kendi branch'inizde değişikliklerinizi yapın.
-4.  **Test edin:** Yaptığınız değişiklikleri test edin.
-5.  **Commit edin:** Değişikliklerinizi açıklayıcı bir commit mesajıyla commit edin.
-6.  **Push edin:** Branch'inizi GitHub'a push edin.
-7.  **Pull Request oluşturun:** Orijinal depoya bir pull request gönderin.
-
-## Lisans
-
-Bu proje MIT Lisansı altında lisanslanmıştır. Lisans detayları için [LICENSE](LICENSE) dosyasına bakınız.
 
 ## İletişim
 
