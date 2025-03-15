@@ -1,4 +1,7 @@
 import pandas as pd
+import numpy as np
+import pywt # Wavelet transform için
+from scipy.fft import fft # Fourier transform için
 from Constants import EXOPLANET_DATA_FILE
 
 class ExoplanetData:
@@ -27,6 +30,60 @@ class ExoplanetData:
         existing_columns = [col for col in columns if col in self.df.columns]
         return self.df[existing_columns]
 
+    def extract_statistical_features(self, columns: list) -> pd.DataFrame:
+        feature_df = pd.DataFrame(index=self.df.index)
+        for col in columns:
+            if col in self.df.columns:
+                mean_val = self.df[col].mean()
+                std_val = self.df[col].std()
+                min_val = self.df[col].min()
+                max_val = self.df[col].max()
+                median_val = self.df[col].median()
+
+                feature_df[f'{col}_mean'] = mean_val
+                feature_df[f'{col}_std'] = std_val
+                feature_df[f'{col}_min'] = min_val
+                feature_df[f'{col}_max'] = max_val
+                feature_df[f'{col}_median'] = median_val
+        return feature_df
+
+    def extract_fourier_features(self, columns: list) -> pd.DataFrame:
+        feature_df = pd.DataFrame(index=self.df.index)
+        for col in columns:
+            if col in self.df.columns:
+                # Her satır için Fourier dönüşümü uygula
+                fft_values = np.abs(fft(self.df[col]))
+                feature_df[f'{col}_fft_mean'] = np.mean(fft_values)
+                feature_df[f'{col}_fft_std'] = np.std(fft_values)
+                feature_df[f'{col}_fft_max'] = np.max(fft_values)
+        return feature_df
+
+    def extract_wavelet_features(self, columns: list, wavelet='haar') -> pd.DataFrame:
+        feature_df = pd.DataFrame(index=self.df.index)
+        for col in columns:
+            if col in self.df.columns:
+                # Her satır için Wavelet dönüşümü uygula
+                coeffs = pywt.wavedec(self.df[col], wavelet, level=1)  # 1 seviyeli ayrıştırma
+                # Detay katsayılarının istatistiksel özelliklerini al
+                feature_df[f'{col}_wavelet_detail_mean'] = np.mean(coeffs[0])
+                feature_df[f'{col}_wavelet_detail_std'] = np.std(coeffs[0])
+                feature_df[f'{col}_wavelet_approx_mean'] = np.mean(coeffs[1])
+                feature_df[f'{col}_wavelet_approx_std'] = np.std(coeffs[1])
+        return feature_df
+
+    def extract_manual_features(self) -> pd.DataFrame:
+        feature_df = pd.DataFrame(index=self.df.index)
+
+        # Örneğin, 'koi_depth' ve 'koi_period' kullanarak yeni bir özellik oluştur
+        if 'koi_depth' in self.df.columns and 'koi_period' in self.df.columns:
+            feature_df['depth_period_ratio'] = self.df['koi_depth'] / self.df['koi_period']
+
+        # Yıldız sıcaklığına göre özellik oluştur
+        if 'koi_steff' in self.df.columns:
+            feature_df['koi_steff_squared'] = self.df['koi_steff'] ** 2
+
+        return feature_df
+    
 if __name__ == "__main__":
 
     try:

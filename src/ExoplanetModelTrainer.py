@@ -8,18 +8,28 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.impute import SimpleImputer 
 
 from Constants import EXOPLANET_DATA_FILE
 from ExoplanetData import ExoplanetData
 
 class ExoplanetModelTrainer:
 
-    def __init__(self, dataframe: pd.DataFrame, target_column: str, test_size: float = 0.2, validation_size: float = 0.2, random_state: int = 42,
+    def __init__(self, dataframe: pd.DataFrame, target_column: str, 
+                 use_statistical: bool = True, use_fourier: bool = True, 
+                 use_wavelet: bool = True, use_manual: bool = True,
+                 feature_columns: list = ['koi_period', 'koi_depth', 'koi_impact', 'koi_duration', 'koi_steff', 'koi_srad'],
+                 test_size: float = 0.2, validation_size: float = 0.2, random_state: int = 42,
                  hidden_layer_sizes: tuple = (100,), activation: str = 'relu', solver: str = 'adam', learning_rate: str = 'constant',
                  learning_rate_init: float = 0.001, max_iter: int = 300, output_dir: str = "../reports"):
 
         self.df = dataframe
         self.target_column = target_column
+        self.use_statistical = use_statistical
+        self.use_fourier = use_fourier
+        self.use_wavelet = use_wavelet
+        self.use_manual = use_manual
+        self.feature_columns = feature_columns  # Hangi sütunlardan özellik çıkarılacağını belirtin
         self.test_size = test_size
         self.validation_size = validation_size
         self.random_state = random_state
@@ -46,17 +56,34 @@ class ExoplanetModelTrainer:
         self.test_accuracies = []
         
     def _prepare_data(self) -> tuple:
-        X = self.df.drop(self.target_column, axis=1)
-        y = self.df[self.target_column]
+        # Veriyi hazırla
+        X = pd.DataFrame(index=self.df.df.index)
 
-        # Önce train ve test olarak ayır
-        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size, random_state=self.random_state)
+        # Özellik Çıkarma
+        if self.use_statistical:
+            X = X.join(self.df.extract_statistical_features(self.feature_columns))
+        if self.use_fourier:
+            X = X.join(self.df.extract_fourier_features(self.feature_columns))
+        if self.use_wavelet:
+            X = X.join(self.df.extract_wavelet_features(self.feature_columns))
+        if self.use_manual:
+            X = X.join(self.df.extract_manual_features())
+        
+        #Özellik çıkarma sonrası NaN kontrolü
+        imputer = SimpleImputer(strategy='mean')
+        X = imputer.fit_transform(X)
 
-        # Sonra train'i train ve validation olarak ayır
-        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=self.validation_size / (1 - self.test_size), random_state=self.random_state)
+        y = self.df.df[self.target_column]
+
+        # Veriyi train ve test olarak ayır
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size, random_state=self.random_state, shuffle=False)
+
+        # Train verisini train ve validation olarak ayır
+        X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=self.validation_size / (1 - self.test_size), random_state=self.random_state, shuffle = False)
 
         return X_train, X_val, X_test, y_train, y_val, y_test
 
+    
     def train_model(self):
 
         for epoch in range(self.max_iter):
@@ -151,7 +178,6 @@ class ExoplanetModelTrainer:
     def get_test_data(self):
         return self.X_test_scaled, self.y_test
 
-
 if __name__ == "__main__":
     try:
         exoplanet_data = ExoplanetData(EXOPLANET_DATA_FILE)
@@ -164,7 +190,9 @@ if __name__ == "__main__":
 
         data[target_column] = data[target_column].astype('category').cat.codes
 
-        trainer = ExoplanetModelTrainer(dataframe=data, target_column=target_column, test_size=0.2, validation_size=0.2, random_state=42,
+        trainer = ExoplanetModelTrainer(dataframe=exoplanet_data, target_column=target_column,
+                                         use_statistical=True, use_fourier=True, use_wavelet=True, use_manual=True,
+                                         feature_columns=feature_columns, test_size=0.2, validation_size=0.2, random_state=42,
                                          hidden_layer_sizes=(128, 64), activation='relu', solver='adam', learning_rate='adaptive',
                                          learning_rate_init=0.001, max_iter=500)
 
@@ -174,16 +202,13 @@ if __name__ == "__main__":
         val_accuracy, val_report, val_cm = trainer.evaluate_validation_set()
         train_accuracy, train_report, train_cm = trainer.evaluate_train_set()
 
-        trainer.save_results(accuracy, report, test_cm, val_accuracy, val_report, val_cm, train_accuracy, train_report, train_cm) 
-        
-        print(f"Model Doğruluğu (Train Seti): {train_accuracy}")
+        trainer.save_results(accuracy, report, test_cm, val_accuracy, val_report, val_cm, train_accuracy, train_report, train_cm)
 
+        print(f"Model Doğruluğu (Train Seti): {train_accuracy}")
         print(f"Model Doğruluğu (Test Seti): {accuracy}")
         print("Sınıflandırma Raporu (Test Seti):\n", report)
-
         print(f"Model Doğruluğu (Validation Seti): {val_accuracy}")
         print("Sınıflandırma Raporu (Validation Seti):\n", val_report)
-        
         print(f"Raporlar {trainer.run_dir} dizinine kaydedildi.")
 
     except FileNotFoundError:
