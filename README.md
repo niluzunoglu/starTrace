@@ -1,4 +1,4 @@
-# StarTrace: Derin Öğrenme Metodları ile Exoplanet Tespiti Projesi
+# ✨StarTrace: Derin Öğrenme Metodları ile Exoplanet Tespiti 🚀
 
 ![Ötegezegen Görseli](assets/Kepler.jpg)
 Kepler Uzay Teleskobu (2009-2018)
@@ -21,7 +21,7 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
 ## Kullanılan Teknolojiler
 
 *   Proje **Python** ile geliştirilmiştir. 
-*   Derin öğrenme metodları **sci-kit learn** kütüphanesi üzerinde gerçekleştirilmiştir.
+*   Derin öğrenme metodları **sci-kit learn** kütüphanesi kullanılarak gerçekleştirilmiştir.
 *   Veri manipülasyonu ve görselleştirme işlemleri **pandas, numpy, matplotlib ve seaborn** kütüphaneleri kullanılarak gerçekleştirilmiştir.
 
 ## Proje Yapısı
