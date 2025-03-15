@@ -1,10 +1,11 @@
-# StarTrace: Exoplanet Transit Tespiti Projesi
+# StarTrace: Derin Öğrenme Metodları ile Exoplanet Tespiti Projesi
 
-![Ötegezegen Görseli](https://www.nasa.gov/sites/default/files/thumbnails/image/kepler16b-artwork.jpg)
+![Ötegezegen Görseli](assets/Kepler.jpg)
+Kepler Uzay Teleskobu (2009-2018)
 
 ## Proje Tanımı
 
-StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen geçişlerini (transit) tespit etmeyi amaçlayan bir ikili sınıflandırma projesidir. Proje, derin öğrenme yöntemlerini kullanarak ışık eğrisi verilerindeki geçiş sinyallerini analiz ederek ötegezegen varlığını tahmin etmeyi hedefler.
+StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen geçişlerini (transit) tespit etmeyi amaçlayan bir ikili sınıflandırma projesidir. Proje, derin öğrenme yöntemlerini kullanarak ışık eğrisi verilerindeki geçiş sinyallerini analiz ederek ötegezegen varlığını tahmin etmeyi hedefler. 
 
 ## Veri Seti
 
