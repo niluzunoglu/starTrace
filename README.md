@@ -1,4 +1,4 @@
-# ✨StarTrace: Derin Öğrenme Metodları ile Exoplanet Tespiti 🚀
+# ✨StarTrace: Derin Öğrenme Metodları ile Ötegezegen Tespiti 🚀
 
 ![Ötegezegen Görseli](assets/Kepler.jpg)
 Kepler Uzay Teleskobu (2009-2018)

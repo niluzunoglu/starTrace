@@ -56,10 +56,8 @@ class ExoplanetModelTrainer:
         self.test_accuracies = []
         
     def _prepare_data(self) -> tuple:
-        # Veriyi hazırla
         X = pd.DataFrame(index=self.df.df.index)
 
-        # Özellik Çıkarma
         if self.use_statistical:
             X = X.join(self.df.extract_statistical_features(self.feature_columns))
         if self.use_fourier:
@@ -69,21 +67,15 @@ class ExoplanetModelTrainer:
         if self.use_manual:
             X = X.join(self.df.extract_manual_features())
         
-        #Özellik çıkarma sonrası NaN kontrolü
         imputer = SimpleImputer(strategy='mean')
         X = imputer.fit_transform(X)
 
         y = self.df.df[self.target_column]
 
-        # Veriyi train ve test olarak ayır
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size, random_state=self.random_state, shuffle=False)
-
-        # Train verisini train ve validation olarak ayır
         X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=self.validation_size / (1 - self.test_size), random_state=self.random_state, shuffle = False)
-
         return X_train, X_val, X_test, y_train, y_val, y_test
 
-    
     def train_model(self):
 
         for epoch in range(self.max_iter):
@@ -179,14 +171,31 @@ class ExoplanetModelTrainer:
         return self.X_test_scaled, self.y_test
 
 if __name__ == "__main__":
+
     try:
         exoplanet_data = ExoplanetData(EXOPLANET_DATA_FILE)
-
         target_column = 'koi_disposition'
-        feature_columns = ['koi_period', 'koi_depth', 'koi_impact', 'koi_duration', 'koi_steff', 'koi_srad']
+        exoplanet_data.remove_candidates(target_column)
 
+        #feature_columns = ['koi_period', 'koi_depth', 'koi_impact', 'koi_duration', 'koi_steff', 'koi_srad']
+
+        feature_columns = [
+                'koi_period',      # Yörünge periyodu (gezegenin yıldız etrafında dönme süresi)
+                'koi_duration',    # Geçiş süresi (gezegenin yıldızın önünden geçme süresi)
+                'koi_depth',       # Geçiş derinliği (yıldızın parlaklığındaki azalma miktarı)
+                'koi_impact',      # Geçişin etkisi (gezegenin yıldızın merkezinden ne kadar uzakta geçtiği)
+                'koi_ror',         # Gezegenin yarıçapının yıldızın yarıçapına oranı
+                'koi_teq',         # Gezegenin denge sıcaklığı
+                'koi_model_snr',   # Model uyum sinyal-gürültü oranı (geçiş sinyalinin ne kadar belirgin olduğu)
+                'koi_steff',       # Yıldızın etkin sıcaklığı
+                'koi_slogg',       # Yıldızın yüzey çekimi
+                'koi_srad'         # Yıldızın yarıçapı
+        ]       
+        
         data = exoplanet_data.get_dataframe_with_columns([target_column] + feature_columns)
         data = data.dropna()
+
+        exoplanet_data.show_target_distribution(target_column)
 
         data[target_column] = data[target_column].astype('category').cat.codes
 

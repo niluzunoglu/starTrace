@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
-import pywt # Wavelet transform için
-from scipy.fft import fft # Fourier transform için
+import pywt
+
+from scipy.fft import fft 
+
 from Constants import EXOPLANET_DATA_FILE
 
 class ExoplanetData:
@@ -51,7 +53,6 @@ class ExoplanetData:
         feature_df = pd.DataFrame(index=self.df.index)
         for col in columns:
             if col in self.df.columns:
-                # Her satır için Fourier dönüşümü uygula
                 fft_values = np.abs(fft(self.df[col]))
                 feature_df[f'{col}_fft_mean'] = np.mean(fft_values)
                 feature_df[f'{col}_fft_std'] = np.std(fft_values)
@@ -74,16 +75,28 @@ class ExoplanetData:
     def extract_manual_features(self) -> pd.DataFrame:
         feature_df = pd.DataFrame(index=self.df.index)
 
-        # Örneğin, 'koi_depth' ve 'koi_period' kullanarak yeni bir özellik oluştur
         if 'koi_depth' in self.df.columns and 'koi_period' in self.df.columns:
             feature_df['depth_period_ratio'] = self.df['koi_depth'] / self.df['koi_period']
 
-        # Yıldız sıcaklığına göre özellik oluştur
         if 'koi_steff' in self.df.columns:
             feature_df['koi_steff_squared'] = self.df['koi_steff'] ** 2
 
         return feature_df
     
+
+    def show_target_distribution(self, target_column: str):
+        if target_column in self.df.columns:
+            print(self.df[target_column].value_counts())
+        else:
+            print(f"Hata: '{target_column}' sütunu bulunamadı.")
+    
+    def remove_candidates(self, target_column: str) -> None:
+        if target_column in self.df.columns:
+            self.df = self.df[self.df[target_column] != 'CANDIDATE']
+            print("CANDIDATE etiketli satırlar temizlendi.")
+        else:
+            print(f"Hata: '{target_column}' sütunu bulunamadı.")
+
 if __name__ == "__main__":
 
     try:
@@ -96,14 +109,16 @@ if __name__ == "__main__":
         confirmed_df = data.filter_by_disposition("CONFIRMED")
         print(f"Bulunan CONFIRMED gezegen satır sayısı: {len(confirmed_df)}")
     
-        all_columns = data.get_columns()
-        print("Tüm sütun isimleri:")
-        print(all_columns)
+        #all_columns = data.get_columns()
+        #print("Tüm sütun isimleri:")
+        #print(all_columns)
 
         desired_columns = ["koi_disposition", "koi_period", "koi_depth"]
         subset_df = data.get_dataframe_with_columns(desired_columns)
         print("Seçilen sütunlardan oluşan DataFrame'in ilk 5 satırı:")
         print(subset_df.head()) 
+
+        data.show_target_distribution("koi_disposition")
 
     except FileNotFoundError:
         print(f"Error: File not found -> {EXOPLANET_DATA_FILE}")

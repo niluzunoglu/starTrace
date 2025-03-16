@@ -1,0 +1,425 @@
+[
+  {
+    "rowid": "Veritabanı satır numarası"
+  },
+  {
+    "kepid": "Gözlemlenen nesnenin Kepler Kimliği"
+  },
+  {
+    "kepoi_name": "Kepler İlgi Nesnesi Adı"
+  },
+  {
+    "kepler_name": "Kepler Gezegen Adı"
+  },
+  {
+    "koi_disposition": "KOI'nin nihai durumu (CONFIRMED, FALSE POSITIVE, CANDIDATE)"
+  },
+  {
+    "koi_vet_stat": "KOI'nin vetlenmiş durumu (İnsan incelemesi sonucu)"
+  },
+  {
+    "koi_vet_date": "KOI'nin vetlenme tarihi"
+  },
+  {
+    "koi_pdisposition": "KOI'nin olasılık temelli durumu (genellikle KOI puanı ile ilişkili)"
+  },
+  {
+    "koi_score": "KOI Puanı"
+  },
+  {
+    "koi_fpflag_nt": "KOI'nin geçiş benzeri sinyal göstermeyen nesne sayısı"
+  },
+  {
+    "koi_fpflag_ss": "KOI'nin tek geçiş sinyali göstermesi"
+  },
+  {
+    "koi_fpflag_co": "KOI'nin geçiş sinyallerinin tutarsız olması"
+  },
+  {
+    "koi_fpflag_ec": "KOI'nin eksantrik yörüngeye sahip olması"
+  },
+  {
+    "koi_disp_prov": "KOI dispozisyonunun kaynağı (örneğin, Q1-Q17 DR25)"
+  },
+  {
+    "koi_comment": "KOI hakkında ek notlar veya yorumlar"
+  },
+  {
+    "koi_period": "Gezegen Yörünge Periyodu [gün]"
+  },
+  {
+    "koi_period_err1": "Yörünge periyodu üst hata payı (gün)"
+  },
+  {
+    "koi_period_err2": "Yörünge periyodu alt hata payı (gün)"
+  },
+  {
+    "koi_time0bk": "Geçiş zamanı (BJD - 2454833.0 gün)"
+  },
+  {
+    "koi_time0bk_err1": "Geçiş zamanı üst hata payı (BJD - 2454833.0 gün)"
+  },
+  {
+    "koi_time0bk_err2": "Geçiş zamanı alt hata payı (BJD - 2454833.0 gün)"
+  },
+  {
+    "koi_time0": "(BJD - 2454900) - Sadece Kepler Q1-Q17 DR24"
+  },
+  {
+    "koi_time0_err1": "koi_time0 için üst hata payı"
+  },
+  {
+    "koi_time0_err2": "koi_time0 için alt hata payı"
+  },
+  {
+    "koi_eccen": "Yörünge eksantrikliği (0: dairesel, 1: çok eliptik)"
+  },
+  {
+    "koi_eccen_err1": "koi_eccen için üst hata payı"
+  },
+  {
+    "koi_eccen_err2": "koi_eccen için alt hata payı"
+  },
+  {
+    "koi_longp": "Yörünge uzunlamasına (derece)"
+  },
+  {
+    "koi_longp_err1": "koi_longp için üst hata payı"
+  },
+  {
+    "koi_longp_err2": "koi_longp için alt hata payı"
+  },
+  {
+    "koi_impact": "Gezegen Etkisi Parametresi"
+  },
+  {
+    "koi_impact_err1": "Geçiş etkisi üst hata payı"
+  },
+  {
+    "koi_impact_err2": "Geçiş etkisi alt hata payı"
+  },
+  {
+    "koi_duration": "Gezegen Geçiş Süresi [saat]"
+  },
+  {
+    "koi_duration_err1": "Geçiş süresi üst hata payı (saat)"
+  },
+  {
+    "koi_duration_err2": "Geçiş süresi alt hata payı (saat)"
+  },
+  {
+    "koi_ingress": "Geçiş başlangıç süresi [saat]"
+  },
+  {
+    "koi_ingress_err1": "koi_ingress için üst hata payı"
+  },
+  {
+    "koi_ingress_err2": "koi_ingress için alt hata payı"
+  },
+  {
+    "koi_depth": "Gezegen Geçiş Derinliği [milyonda kısım]"
+  },
+  {
+    "koi_depth_err1": "Geçiş derinliği üst hata payı (ppm)"
+  },
+  {
+    "koi_depth_err2": "Geçiş derinliği alt hata payı (ppm)"
+  },
+  {
+    "koi_ror": "Gezegen-Yıldız Yarıçap Oranı"
+  },
+  {
+    "koi_ror_err1": "koi_ror için üst hata payı"
+  },
+  {
+    "koi_ror_err2": "koi_ror için alt hata payı"
+  },
+  {
+    "koi_srho": "Yıldız yoğunluğu (g/cm^3)"
+  },
+  {
+    "koi_srho_err1": "koi_srho için üst hata payı"
+  },
+  {
+    "koi_srho_err2": "koi_srho için alt hata payı"
+  },
+  {
+    "koi_fittype": "Kullanılan geçiş modeli türü"
+  },
+  {
+    "koi_prad": "Gezegen Yarıçapı [Dünya yarıçapı]"
+  },
+  {
+    "koi_prad_err1": "Gezegenin yarıçapı üst hata payı (Dünya yarıçapı cinsinden)"
+  },
+  {
+    "koi_prad_err2": "Gezegenin yarıçapı alt hata payı (Dünya yarıçapı cinsinden)"
+  },
+  {
+    "koi_sma": "Yarı-büyük eksen (AU - astronomik birim)"
+  },
+  {
+    "koi_sma_err1": "koi_sma için üst hata payı"
+  },
+  {
+    "koi_sma_err2": "koi_sma için alt hata payı"
+  },
+  {
+    "koi_incl": "Yörünge eğikliği (derece)"
+  },
+  {
+    "koi_incl_err1": "koi_incl için üst hata payı"
+  },
+  {
+    "koi_incl_err2": "koi_incl için alt hata payı"
+  },
+  {
+    "koi_teq": "Gezegen Denge Sıcaklığı [K]"
+  },
+  {
+    "koi_teq_err1": "Gezegenin denge sıcaklığı üst hata payı (Kelvin)"
+  },
+  {
+    "koi_teq_err2": "Gezegenin denge sıcaklığı alt hata payı (Kelvin)"
+  },
+  {
+    "koi_insol": "Gezegenin aldığı ışınım (Earth flux units)"
+  },
+  {
+    "koi_insol_err1": "koi_insol için üst hata payı"
+  },
+  {
+    "koi_insol_err2": "koi_insol için alt hata payı"
+  },
+  {
+    "koi_dor": "Gezegenin yıldızından uzaklığı (yıldız yarıçapı cinsinden)"
+  },
+  {
+    "koi_dor_err1": "koi_dor için üst hata payı"
+  },
+  {
+    "koi_dor_err2": "koi_dor için alt hata payı"
+  },
+  {
+    "koi_limbdark_mod": "Kullanılan limb darkening modeli"
+  },
+  {
+    "koi_ldm_coeff4": "Limb darkening katsayısı 4"
+  },
+  {
+    "koi_ldm_coeff3": "Limb darkening katsayısı 3"
+  },
+  {
+    "koi_ldm_coeff2": "Limb darkening katsayısı 2"
+  },
+  {
+    "koi_ldm_coeff1": "Limb darkening katsayısı 1"
+  },
+  {
+    "koi_parm_prov": "Parametre kaynağı"
+  },
+  {
+    "koi_max_sngle_ev": "En yüksek tekil olay"
+  },
+  {
+    "koi_max_mult_ev": "En yüksek çoklu olay"
+  },
+  {
+    "koi_model_snr": "Model uyum sinyal-gürültü oranı"
+  },
+  {
+    "koi_count": "KOI sayısı"
+  },
+  {
+    "koi_num_transits": "Gözlemlenen geçiş sayısı"
+  },
+  {
+    "koi_tce_plnt_num": "Aynı yıldız etrafında dönen gezegenlerin sayısı"
+  },
+  {
+    "koi_tce_delivname": "TCE (Threshold-Crossing Event) teslim adı"
+  },
+  {
+    "koi_quarters": "Gözlemlenen çeyrekler"
+  },
+  {
+    "koi_bin_oedp_sig": "İkili olay algılama olasılığı"
+  },
+  {
+    "koi_trans_mod": "Geçiş modülasyonu"
+  },
+  {
+    "koi_model_dof": "Model serbestlik derecesi"
+  },
+  {
+    "koi_model_chisq": "Model ki-kare değeri"
+  },
+  {
+    "koi_datalink_dvr": "Datalink DVR"
+  },
+  {
+    "koi_datalink_dvs": "Datalink DVS"
+  },
+  {
+    "koi_steff": "Yıldız Etkin Sıcaklığı [K]"
+  },
+  {
+    "koi_steff_err1": "Yıldızın etkin sıcaklığı üst hata payı (Kelvin)"
+  },
+  {
+    "koi_steff_err2": "Yıldızın etkin sıcaklığı alt hata payı (Kelvin)"
+  },
+  {
+    "koi_slogg": "Yıldız Yüzey Çekimi [log10(cm/s^2)]"
+  },
+  {
+    "koi_slogg_err1": "Yıldızın yüzey çekimi üst hata payı (log10(cm/s^2))"
+  },
+  {
+    "koi_slogg_err2": "Yıldızın yüzey çekimi alt hata payı (log10(cm/s^2))"
+  },
+  {
+    "koi_smet": "Yıldızın metalikliği (dex)"
+  },
+  {
+    "koi_smet_err1": "koi_smet için üst hata payı"
+  },
+  {
+    "koi_smet_err2": "koi_smet için alt hata payı"
+  },
+  {
+    "koi_srad": "Yıldız Yarıçapı [Güneş yarıçapı]"
+  },
+  {
+    "koi_srad_err1": "Yıldızın yarıçapı üst hata payı (Güneş yarıçapı cinsinden)"
+  },
+  {
+    "koi_srad_err2": "Yıldızın yarıçapı alt hata payı (Güneş yarıçapı cinsinden)"
+  },
+  {
+    "koi_smass": "Yıldızın kütlesi (Güneş kütlesi cinsinden)"
+  },
+  {
+    "koi_smass_err1": "Yıldızın kütlesi üst hata payı (Güneş kütlesi cinsinden)"
+  },
+  {
+    "koi_smass_err2": "Yıldızın kütlesi alt hata payı (Güneş kütlesi cinsinden)"
+  },
+  {
+    "koi_sage": "Yıldızın yaşı (milyar yıl)"
+  },
+  {
+    "koi_sage_err1": "koi_sage için üst hata payı"
+  },
+  {
+    "koi_sage_err2": "koi_sage için alt hata payı"
+  },
+  {
+    "koi_sparprov": "Yıldız parametre kaynağı"
+  },
+  {
+    "ra": "Sağ açıklık (derece)"
+  },
+  {
+    "dec": "Yükselim (derece)"
+  },
+  {
+    "koi_kepmag": "Kepler büyüklüğü"
+  },
+  {
+    "koi_gmag": "G büyüklüğü"
+  },
+  {
+    "koi_rmag": "R büyüklüğü"
+  },
+  {
+    "koi_imag": "I büyüklüğü"
+  },
+  {
+    "koi_zmag": "Z büyüklüğü"
+  },
+  {
+    "koi_jmag": "J büyüklüğü"
+  },
+  {
+    "koi_hmag": "H büyüklüğü"
+  },
+  {
+    "koi_kmag": "K büyüklüğü"
+  },
+  {
+    "koi_fwm_stat_sig": "Sahte alarm olasılığı"
+  },
+  {
+    "koi_fwm_sra": "Kaynak RA ofset"
+  },
+  {
+    "koi_fwm_sra_err": "Kaynak RA ofset hatası"
+  },
+  {
+    "koi_fwm_sdec": "Kaynak Aralık ofseti"
+  },
+  {
+    "koi_fwm_sdec_err": "Kaynak Aralık ofset hatası"
+  },
+  {
+    "koi_fwm_srao": "Kaynak RA offset"
+  },
+  {
+    "koi_fwm_srao_err": "Kaynak RA offset hatası"
+  },
+  {
+    "koi_fwm_sdeco": "Kaynak Aralık ofseti"
+  },
+  {
+    "koi_fwm_sdeco_err": "Kaynak Aralık ofset hatası"
+  },
+  {
+    "koi_fwm_prao": "Proper motion RA offset"
+  },
+  {
+    "koi_fwm_prao_err": "Proper motion RA offset hatası"
+  },
+  {
+    "koi_fwm_pdeco": "Proper motion Dec offset"
+  },
+  {
+    "koi_fwm_pdeco_err": "Proper motion Dec offset hatası"
+  },
+  {
+    "koi_dicco_mra": "DICCO RA offset"
+  },
+  {
+    "koi_dicco_mra_err": "DICCO RA offset hatası"
+  },
+  {
+    "koi_dicco_mdec": "DICCO Dec offset"
+  },
+  {
+    "koi_dicco_mdec_err": "DICCO Dec offset hatası"
+  },
+  {
+    "koi_dicco_msky": "DICCO Sky offset"
+  },
+  {
+    "koi_dicco_msky_err": "DICCO Sky offset hatası"
+  },
+  {
+    "koi_dikco_mra": "DIKCO RA offset"
+  },
+  {
+    "koi_dikco_mra_err": "DIKCO RA offset hatası"
+  },
+  {
+    "koi_dikco_mdec": "DIKCO Dec offset"
+  },
+  {
+    "koi_dikco_mdec_err": "DIKCO Dec offset hatası"
+  },
+  {
+    "koi_dikco_msky": "DIKCO Sky offset"
+  },
+  {
+    "koi_dikco_msky_err": "DIKCO Sky offset hatası"
+  }
+]
