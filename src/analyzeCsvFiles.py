@@ -26,4 +26,4 @@ def analyze_data(cumulative_path, confirmed_path, false_positive_path):
         print(f"Bir hata oluştu: {e}")
 
 if __name__ == "__main__":
-    analyze_data(EXOPLANET_DATA_FILE, CONFIRMED_EXOPLANET_DATA_FILE, FALSE_POSITIVE_EXOPLANET_DATA_FILE)
+    analyze_data(KEPLER_EXOPLANET_DATA_FILE, KEPLER_CONFIRMED_EXOPLANET_DATA_FILE, KEPLER_FALSE_POSITIVE_EXOPLANET_DATA_FILE)

@@ -4,7 +4,7 @@ import pywt
 
 from scipy.fft import fft 
 
-from Constants import EXOPLANET_DATA_FILE
+from Constants import KEPLER_EXOPLANET_DATA_FILE
 
 class ExoplanetData:
 
@@ -100,7 +100,7 @@ class ExoplanetData:
 if __name__ == "__main__":
 
     try:
-        data = ExoplanetData(EXOPLANET_DATA_FILE)
+        data = ExoplanetData(KEPLER_EXOPLANET_DATA_FILE)
         data.show_head()
 
         summary_df = data.summary()
@@ -121,10 +121,10 @@ if __name__ == "__main__":
         data.show_target_distribution("koi_disposition")
 
     except FileNotFoundError:
-        print(f"Error: File not found -> {EXOPLANET_DATA_FILE}")
+        print(f"Error: File not found -> {KEPLER_EXOPLANET_DATA_FILE}")
     
     except pd.errors.ParserError:
-        print(f"Error: Could not parse the file -> {EXOPLANET_DATA_FILE}")
+        print(f"Error: Could not parse the file -> {KEPLER_EXOPLANET_DATA_FILE}")
     
     except Exception as e:
         print(f"An unexpected error occurred: {e}")

@@ -10,7 +10,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.impute import SimpleImputer 
 
-from Constants import EXOPLANET_DATA_FILE
+from Constants import KEPLER_EXOPLANET_DATA_FILE
 from ExoplanetData import ExoplanetData
 
 class ExoplanetModelTrainer:
@@ -173,7 +173,7 @@ class ExoplanetModelTrainer:
 if __name__ == "__main__":
 
     try:
-        exoplanet_data = ExoplanetData(EXOPLANET_DATA_FILE)
+        exoplanet_data = ExoplanetData(KEPLER_EXOPLANET_DATA_FILE)
         target_column = 'koi_disposition'
         exoplanet_data.remove_candidates(target_column)
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
         print(f"Raporlar {trainer.run_dir} dizinine kaydedildi.")
 
     except FileNotFoundError:
-        print(f"{EXOPLANET_DATA_FILE} dosyası bulunamadı.")
+        print(f"{KEPLER_EXOPLANET_DATA_FILE} dosyası bulunamadı.")
     except KeyError as e:
         print(f"Sütun hatası: {e}. Lütfen sütun adlarını kontrol edin.")
     except Exception as e:
