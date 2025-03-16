@@ -203,7 +203,7 @@ if __name__ == "__main__":
                                          use_statistical=True, use_fourier=True, use_wavelet=True, use_manual=True,
                                          feature_columns=feature_columns, test_size=0.2, validation_size=0.2, random_state=42,
                                          hidden_layer_sizes=(128, 64), activation='relu', solver='adam', learning_rate='adaptive',
-                                         learning_rate_init=0.001, max_iter=500)
+                                         learning_rate_init=0.001, max_iter=100)
 
         trainer.train_model()
 
