@@ -44,7 +44,9 @@ class MastDataDownloader:
 if __name__ == "__main__":
 
     downloader = MastDataDownloader(data_dir="mast_data")  # Verilerin kaydedileceği ana dizin
+    print("Download data 1")
     downloader.download_data(target_name="Kepler-10", mission="TESS")
+    print("Download data 2")
     downloader.download_data(target_name="Kepler-10", mission="Kepler")
 
     #downloader.download_data(target_name="M31", mission="HST", product_type="images")
