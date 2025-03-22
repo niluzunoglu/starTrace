@@ -29,7 +29,7 @@ class ExoplanetModelTrainer:
         self.use_fourier = use_fourier
         self.use_wavelet = use_wavelet
         self.use_manual = use_manual
-        self.feature_columns = feature_columns  # Hangi sütunlardan özellik çıkarılacağını belirtin
+        self.feature_columns = feature_columns 
         self.test_size = test_size
         self.validation_size = validation_size
         self.random_state = random_state
@@ -199,11 +199,22 @@ if __name__ == "__main__":
 
         data[target_column] = data[target_column].astype('category').cat.codes
 
-        trainer = ExoplanetModelTrainer(dataframe=exoplanet_data, target_column=target_column,
-                                         use_statistical=True, use_fourier=True, use_wavelet=True, use_manual=True,
-                                         feature_columns=feature_columns, test_size=0.2, validation_size=0.2, random_state=42,
-                                         hidden_layer_sizes=(128, 64), activation='relu', solver='adam', learning_rate='adaptive',
-                                         learning_rate_init=0.001, max_iter=100)
+        trainer = ExoplanetModelTrainer(dataframe=exoplanet_data, 
+                                        target_column=target_column,
+                                        use_statistical=True, 
+                                        use_fourier=True, 
+                                        use_wavelet=True, 
+                                        use_manual=True,
+                                        feature_columns=feature_columns, 
+                                        test_size=0.2, 
+                                        validation_size=0.2, 
+                                        random_state=42,
+                                        hidden_layer_sizes=(64,32,64),
+                                        activation='relu', 
+                                        solver='adam', 
+                                        learning_rate='adaptive',
+                                        learning_rate_init=0.001, 
+                                        max_iter=500)
 
         trainer.train_model()
 
