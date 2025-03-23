@@ -1,20 +1,34 @@
 import pandas as pd
+from ObservationSource import ObservationSource
 import numpy as np
 import pywt
-
-from scipy.fft import fft 
-
-from Constants import EXOPLANET_DATA_FILE
+from scipy.fft import fft
+from Constants import KEPLER_CSV_PATH, TESS_CSV_PATH
+from mappingTable import COLUMN_MAPPING
 
 class ExoplanetData:
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, observation_source: ObservationSource = ObservationSource):
         self.file_path = file_path
+        self.observation_source = observation_source
         self.df = self._load_data()
+        self.target_column = "disposition"  
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
+        df = self._rename_columns(df)  
+        print(f"Veri kaynağı: {self.observation_source}")
+        print("Son hali\n",df.head())
         return df
+
+    def _rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        mapping = COLUMN_MAPPING.get(str(self.observation_source))
+        if mapping:
+            existing_columns = set(df.columns)
+            rename_dict = {source_col: target_col for source_col, target_col in mapping.items() if source_col in existing_columns}
+            return df.rename(columns=rename_dict)
+        else:
+            raise ValueError(f"Bilinmeyen gözlem kaynağı: {self.observation_source}")
 
     def show_head(self, n: int = 5):
         print(self.df.head(n))
@@ -23,7 +37,7 @@ class ExoplanetData:
         return self.df.describe()
 
     def filter_by_disposition(self, disposition: str) -> pd.DataFrame:
-        return self.df[self.df['koi_disposition'] == disposition]
+        return self.df[self.df[self.target_column] == disposition]
     
     def get_columns(self) -> list:
         return list(self.df.columns)
@@ -63,9 +77,7 @@ class ExoplanetData:
         feature_df = pd.DataFrame(index=self.df.index)
         for col in columns:
             if col in self.df.columns:
-                # Her satır için Wavelet dönüşümü uygula
-                coeffs = pywt.wavedec(self.df[col], wavelet, level=1)  # 1 seviyeli ayrıştırma
-                # Detay katsayılarının istatistiksel özelliklerini al
+                coeffs = pywt.wavedec(self.df[col], wavelet, level=1)
                 feature_df[f'{col}_wavelet_detail_mean'] = np.mean(coeffs[0])
                 feature_df[f'{col}_wavelet_detail_std'] = np.std(coeffs[0])
                 feature_df[f'{col}_wavelet_approx_mean'] = np.mean(coeffs[1])
@@ -75,56 +87,71 @@ class ExoplanetData:
     def extract_manual_features(self) -> pd.DataFrame:
         feature_df = pd.DataFrame(index=self.df.index)
 
-        if 'koi_depth' in self.df.columns and 'koi_period' in self.df.columns:
-            feature_df['depth_period_ratio'] = self.df['koi_depth'] / self.df['koi_period']
+        period_col = "period"  
+        depth_col = "depth"   
+        steff_col = "steff"
 
-        if 'koi_steff' in self.df.columns:
-            feature_df['koi_steff_squared'] = self.df['koi_steff'] ** 2
+        if period_col in self.df.columns and depth_col in self.df.columns:
+            feature_df['depth_period_ratio'] = self.df[depth_col] / self.df[period_col]
+
+        if steff_col in self.df.columns:
+            feature_df['steff_squared'] = self.df[steff_col] ** 2
 
         return feature_df
-    
 
-    def show_target_distribution(self, target_column: str):
-        if target_column in self.df.columns:
-            print(self.df[target_column].value_counts())
+    def show_target_distribution(self):
+        if self.target_column in self.df.columns:
+            print(self.df[self.target_column].value_counts())
         else:
-            print(f"Hata: '{target_column}' sütunu bulunamadı.")
+            print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
     
-    def remove_candidates(self, target_column: str) -> None:
-        if target_column in self.df.columns:
-            self.df = self.df[self.df[target_column] != 'CANDIDATE']
+    def remove_candidates(self):
+        if self.target_column in self.df.columns:
+            self.df = self.df[self.df[self.target_column] != 'CANDIDATE'] #Buraya Kanditat olup olmama durumunu nasıl yapacaz
             print("CANDIDATE etiketli satırlar temizlendi.")
         else:
-            print(f"Hata: '{target_column}' sütunu bulunamadı.")
+            print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
+
+def merge_dataframes(df1: pd.DataFrame, df2: pd.DataFrame, 
+                         common_columns: list) -> pd.DataFrame:
+    """İki DataFrame'i ortak sütunlara göre birleştirir."""
+    merged_df = pd.merge(df1, df2, on=common_columns, how='inner')
+    return merged_df
 
 if __name__ == "__main__":
 
     try:
-        data = ExoplanetData(EXOPLANET_DATA_FILE)
-        data.show_head()
+        kepler_type = ObservationSource.KEPLER
+        kepler_data = ExoplanetData(KEPLER_CSV_PATH, kepler_type)
+        #print("\nKepler Verisi Özeti:")
+        #kepler_data.show_head()
+        kepler_data.show_target_distribution()
+        #print(kepler_data.get_columns())
 
-        summary_df = data.summary()
-        print(summary_df)
+        tess_type = ObservationSource.TESS
+        tess_data = ExoplanetData(TESS_CSV_PATH, tess_type)
+        #print("\nTESS Verisi Özeti:")
+        #tess_data.show_head()
+        tess_data.show_target_distribution()
+        #print(tess_data.get_columns())
 
-        confirmed_df = data.filter_by_disposition("CONFIRMED")
-        print(f"Bulunan CONFIRMED gezegen satır sayısı: {len(confirmed_df)}")
-    
-        #all_columns = data.get_columns()
-        #print("Tüm sütun isimleri:")
-        #print(all_columns)
+        """ 
+        common_columns = ["period", "depth", "duration", "steff", "srad", "slogg", "model_snr", "ra", "dec"]
+        existing_kepler_columns = [col for col in common_columns if col in kepler_data.df.columns]
+        existing_tess_columns = [col for col in common_columns if col in tess_data.df.columns]
+        
+        # Veriyi hazırla
+        kepler_subset = kepler_data.get_dataframe_with_columns(existing_kepler_columns)
+        tess_subset = tess_data.get_dataframe_with_columns(existing_tess_columns)
 
-        desired_columns = ["koi_disposition", "koi_period", "koi_depth"]
-        subset_df = data.get_dataframe_with_columns(desired_columns)
-        print("Seçilen sütunlardan oluşan DataFrame'in ilk 5 satırı:")
-        print(subset_df.head()) 
-
-        data.show_target_distribution("koi_disposition")
-
+        common_cols = list(set(kepler_subset.columns) & set(tess_subset.columns))
+        print(f"\nOrtak sütunlar: {common_cols}")
+        """
     except FileNotFoundError:
-        print(f"Error: File not found -> {EXOPLANET_DATA_FILE}")
+        print(f"Error: File not found -> {KEPLER_CSV_PATH}")
     
     except pd.errors.ParserError:
-        print(f"Error: Could not parse the file -> {EXOPLANET_DATA_FILE}")
+        print(f"Error: Could not parse the file -> {KEPLER_CSV_PATH}")
     
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
