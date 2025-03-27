@@ -17,6 +17,7 @@ class ExoplanetData:
         self.target_column = "disposition"  
         self.df = self._clean_data(self.df)
         self.common_columns = []
+        self.df["id"] = self.df["id"].astype(str)
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
@@ -150,7 +151,7 @@ class ExoplanetData:
             print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
 
 
-def merge_exoplanet_data(data1: 'ExoplanetData', data2: 'ExoplanetData', common_columns:list, output_path: str) -> pd.DataFrame:
+def merge_exoplanet_data(data1: ExoplanetData, data2: ExoplanetData, common_columns:list, output_path: str) -> pd.DataFrame:
     """
     İki ExoplanetData nesnesinin verisini (df) ortak sütunlara göre birleştirir 
     ve sonucu belirtilen dosya yoluna kaydeder.
@@ -167,7 +168,14 @@ def merge_exoplanet_data(data1: 'ExoplanetData', data2: 'ExoplanetData', common_
     df1 = data1.df
     df2 = data2.df
 
-    merged_df = pd.merge(df1, df2, on = common_columns, how='inner')
+    print(df1)
+    print(df2)
+
+    print("Common columns : ", common_columns)
+    merged_df = pd.merge(df1, df2, on = common_columns, how='outer')
+    print(merged_df)
+
+    print(f"✅ Merge sonucu: {len(merged_df)} satır")
     merged_df.to_csv(output_path, index=False)
     print(f"✅ Birleştirilmiş veri kaydedildi: {output_path}")
     return merged_df
@@ -189,7 +197,8 @@ if __name__ == "__main__":
         tess_data.show()
         #print(tess_data.get_columns())
 
-        merge_exoplanet_data(kepler_data, tess_data, common_columns=kepler_data.common_columns, output_path="../data/multimission/MERGED/kepler_and_tess.csv")
+        common_columns = list(COLUMN_MAPPING.get(str(ObservationSource.TESS)).keys())
+        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path="../data/multimission/MERGED/kepler_and_tess.csv")
 
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")
