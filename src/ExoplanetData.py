@@ -11,13 +11,20 @@ from ObservationSource import ObservationSource
 class ExoplanetData:
 
     def __init__(self, file_path: str, observation_source: ObservationSource = ObservationSource):
-        self.file_path = file_path
-        self.observation_source = observation_source
-        self.df = self._load_data()
-        self.target_column = "disposition"  
-        self.df = self._clean_data(self.df)
-        self.common_columns = []
-        self.df["id"] = self.df["id"].astype(str)
+        
+        if(observation_source != ObservationSource.MERGED):
+            self.file_path = file_path
+            self.observation_source = observation_source
+            self.df = self._load_data()
+            self.target_column = "disposition"  
+            self.df = self._clean_data(self.df)
+            self.common_columns = []
+            self.df["id"] = self.df["id"].astype(str)
+        
+        else:
+            self.file_path = file_path
+            self.df = self._load_data()
+
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
@@ -199,6 +206,8 @@ if __name__ == "__main__":
 
         common_columns = list(COLUMN_MAPPING.get(str(ObservationSource.TESS)).keys())
         merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path="../data/multimission/MERGED/kepler_and_tess.csv")
+
+
 
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")

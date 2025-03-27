@@ -6,6 +6,7 @@ class ObservationSource(Enum):
     TESS = "TESS"
     K2 = "K2"
     CHEOPS = "CHEOPS"
+    MERGED = "MERGED"
 
     def __str__(self):
         return self.value
@@ -21,6 +22,8 @@ class ObservationSource(Enum):
             return cls.K2
         elif label == "CHEOPS":
             return cls.CHEOPS
+        elif label == "MERGED":
+            return cls.MERGED
         else:
             raise ValueError(f"Geçersiz gözlem kaynağı: {label}")
 

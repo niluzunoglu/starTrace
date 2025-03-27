@@ -10,8 +10,9 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 from sklearn.impute import SimpleImputer 
 
-from Constants import EXOPLANET_DATA_FILE
+from Constants import EXOPLANET_DATA_FILE, MERGED_CSV_PATH
 from ExoplanetData import ExoplanetData
+import ObservationSource
 
 class ExoplanetModelTrainer:
 
@@ -173,6 +174,8 @@ class ExoplanetModelTrainer:
 if __name__ == "__main__":
 
     try:
+
+        merged_exoplanet_data = ExoplanetData(MERGED_CSV_PATH, observation_source=ObservationSource.fr)
         exoplanet_data = ExoplanetData(EXOPLANET_DATA_FILE)
         target_column = 'koi_disposition'
         exoplanet_data.remove_candidates(target_column)
