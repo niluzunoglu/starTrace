@@ -10,24 +10,24 @@ from ObservationSource import ObservationSource
 
 class ExoplanetData:
 
-    def __init__(self, file_path: str, observation_source: ObservationSource = ObservationSource):
-        
-        if(observation_source != ObservationSource.MERGED):
-            self.file_path = file_path
-            self.observation_source = observation_source
-            self.df = self._load_data()
-            self.target_column = "disposition"  
+    def __init__(self, file_path: str, observation_source: ObservationSource = ObservationSource.KEPLER):
+
+        print("[Data] Obje oluşturuluyor...")
+        self.file_path = file_path
+        self.observation_source = observation_source
+        self.df = self._load_data()
+        self.target_column = "disposition" 
+        print("[Data] Obje oluşturuldu..")
+
+        if(self.observation_source != ObservationSource.MERGED):
             self.df = self._clean_data(self.df)
             self.common_columns = []
             self.df["id"] = self.df["id"].astype(str)
-        
-        else:
-            self.file_path = file_path
-            self.df = self._load_data()
-
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
+
+        if(self.observation_source)
         df = self._refactor_columns(df)  
         return df
 

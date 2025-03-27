@@ -12,7 +12,7 @@ from sklearn.impute import SimpleImputer
 
 from Constants import EXOPLANET_DATA_FILE, MERGED_CSV_PATH
 from ExoplanetData import ExoplanetData
-import ObservationSource
+from ObservationSource import ObservationSource
 
 class ExoplanetModelTrainer:
 
@@ -175,34 +175,32 @@ if __name__ == "__main__":
 
     try:
 
-        merged_exoplanet_data = ExoplanetData(MERGED_CSV_PATH, observation_source=ObservationSource.fr)
-        exoplanet_data = ExoplanetData(EXOPLANET_DATA_FILE)
-        target_column = 'koi_disposition'
-        exoplanet_data.remove_candidates(target_column)
+        merged_exoplanet_data = ExoplanetData(file_path=MERGED_CSV_PATH, observation_source=ObservationSource.from_string("MERGED"))
+        target_column = 'disposition'
 
         #feature_columns = ['koi_period', 'koi_depth', 'koi_impact', 'koi_duration', 'koi_steff', 'koi_srad']
 
         feature_columns = [
-                'koi_period',      # Yörünge periyodu (gezegenin yıldız etrafında dönme süresi)
-                'koi_duration',    # Geçiş süresi (gezegenin yıldızın önünden geçme süresi)
-                'koi_depth',       # Geçiş derinliği (yıldızın parlaklığındaki azalma miktarı)
-                'koi_impact',      # Geçişin etkisi (gezegenin yıldızın merkezinden ne kadar uzakta geçtiği)
-                'koi_ror',         # Gezegenin yarıçapının yıldızın yarıçapına oranı
-                'koi_teq',         # Gezegenin denge sıcaklığı
-                'koi_model_snr',   # Model uyum sinyal-gürültü oranı (geçiş sinyalinin ne kadar belirgin olduğu)
-                'koi_steff',       # Yıldızın etkin sıcaklığı
-                'koi_slogg',       # Yıldızın yüzey çekimi
-                'koi_srad'         # Yıldızın yarıçapı
-        ]       
+            "id",
+            "period",
+            "duration"
+            "depth",
+            "steff",
+            "srad",
+            "slogg",
+            "model_snr",
+            "ra",
+            "dec"
+        ]
         
-        data = exoplanet_data.get_dataframe_with_columns([target_column] + feature_columns)
+        data = merged_exoplanet_data.get_dataframe_with_columns([target_column] + feature_columns)
         data = data.dropna()
 
-        exoplanet_data.show_target_distribution(target_column)
+        data.show_target_distribution(target_column)
 
         data[target_column] = data[target_column].astype('category').cat.codes
 
-        trainer = ExoplanetModelTrainer(dataframe=exoplanet_data, 
+        trainer = ExoplanetModelTrainer(dataframe=data, 
                                         target_column=target_column,
                                         use_statistical=True, 
                                         use_fourier=True, 
