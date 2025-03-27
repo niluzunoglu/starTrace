@@ -1,10 +1,12 @@
 import pandas as pd
-from ObservationSource import ObservationSource
 import numpy as np
 import pywt
+from tabulate import tabulate
+
 from scipy.fft import fft
 from Constants import KEPLER_CSV_PATH, TESS_CSV_PATH
 from mappingTable import COLUMN_MAPPING
+from ObservationSource import ObservationSource
 
 class ExoplanetData:
 
@@ -14,6 +16,7 @@ class ExoplanetData:
         self.df = self._load_data()
         self.target_column = "disposition"  
         self.df = self._clean_data(self.df)
+        self.common_columns = []
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
@@ -30,11 +33,11 @@ class ExoplanetData:
             df = df.rename(columns=rename_dict)
             # Verilen sütun isimleri dışında kalan sütunların silinmesi.
             filtered_df = df[list(rename_dict.values())]
-            print("Filtered dataframe : \n", filtered_df)
 
-            if 'disposition' in df.columns:
-                print("Disposition sütunundaki unique değerler:", df['disposition'].unique())
-
+            # Yeni bir teleskop verisi eklenirken kullanılabileceği için yorum satırında.
+            #if 'disposition' in df.columns:
+            #    print("Disposition sütunundaki unique değerler:", df['disposition'].unique())
+            self.common_columns = filtered_df.columns
             return filtered_df
         
         else:
@@ -42,7 +45,7 @@ class ExoplanetData:
         
     def _clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
 
-        if str(self.observation_source).lower() == "tess":
+        if self.observation_source == ObservationSource.TESS:
 
             # Known planet, Ambigious Planet Candidate ve False Alarmları sil.
             df = df[~df["disposition"].isin(["KP", "APC", "FA"])].copy()
@@ -55,6 +58,14 @@ class ExoplanetData:
             })
 
         return df
+    
+    def show(self, max_rows: int = 10):
+
+        pd.set_option('display.max_columns', None)
+        print("\n🔭 {} Exoplanet Verisi (ilk {} satır):\n".format(str(self.observation_source), max_rows))
+        print(tabulate(self.df.head(max_rows), headers='keys', tablefmt='fancy_grid', showindex=False))
+        print(f"\n📏 Toplam Satır: {len(self.df)} | Sütun: {len(self.df.columns)}")
+
 
     def show_head(self, n: int = 5):
         print(self.df.head(n))
@@ -138,10 +149,27 @@ class ExoplanetData:
         else:
             print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
 
-def merge_dataframes(df1: pd.DataFrame, df2: pd.DataFrame, 
-                         common_columns: list) -> pd.DataFrame:
-    """İki DataFrame'i ortak sütunlara göre birleştirir."""
-    merged_df = pd.merge(df1, df2, on=common_columns, how='inner')
+
+def merge_exoplanet_data(data1: 'ExoplanetData', data2: 'ExoplanetData', common_columns:list, output_path: str) -> pd.DataFrame:
+    """
+    İki ExoplanetData nesnesinin verisini (df) ortak sütunlara göre birleştirir 
+    ve sonucu belirtilen dosya yoluna kaydeder.
+
+    Args:
+        data1 (ExoplanetData): Birinci veri nesnesi.
+        data2 (ExoplanetData): İkinci veri nesnesi.
+        common_columns (list): Ortak sütun adları.
+        output_path (str): Kaydedilecek CSV dosyasının yolu.
+
+    Returns:
+        pd.DataFrame: Birleştirilmiş veri çerçevesi.
+    """
+    df1 = data1.df
+    df2 = data2.df
+
+    merged_df = pd.merge(df1, df2, on = common_columns, how='inner')
+    merged_df.to_csv(output_path, index=False)
+    print(f"✅ Birleştirilmiş veri kaydedildi: {output_path}")
     return merged_df
 
 if __name__ == "__main__":
@@ -151,26 +179,18 @@ if __name__ == "__main__":
         #print("\nKepler Verisi Özeti:")
         #kepler_data.show_head()
         kepler_data.show_target_distribution()
+        kepler_data.show()
         #print(kepler_data.get_columns())
 
         tess_data = ExoplanetData(TESS_CSV_PATH, ObservationSource.TESS)
         #print("\nTESS Verisi Özeti:")
         #tess_data.show_head()
         tess_data.show_target_distribution()
+        tess_data.show()
         #print(tess_data.get_columns())
 
-        """ 
-        common_columns = ["period", "depth", "duration", "steff", "srad", "slogg", "model_snr", "ra", "dec"]
-        existing_kepler_columns = [col for col in common_columns if col in kepler_data.df.columns]
-        existing_tess_columns = [col for col in common_columns if col in tess_data.df.columns]
-        
-        # Veriyi hazırla
-        kepler_subset = kepler_data.get_dataframe_with_columns(existing_kepler_columns)
-        tess_subset = tess_data.get_dataframe_with_columns(existing_tess_columns)
+        merge_exoplanet_data(kepler_data, tess_data, common_columns=kepler_data.common_columns, output_path="../data/multimission/MERGED/kepler_and_tess.csv")
 
-        common_cols = list(set(kepler_subset.columns) & set(tess_subset.columns))
-        print(f"\nOrtak sütunlar: {common_cols}")
-        """
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")
     
