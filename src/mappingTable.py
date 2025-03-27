@@ -1,6 +1,7 @@
 
 COLUMN_MAPPING = {
     "Kepler": {
+        "id":"kepid",
         "period": "koi_period",
         "duration": "koi_duration",
         "depth": "koi_depth",
@@ -13,6 +14,7 @@ COLUMN_MAPPING = {
         "disposition": "koi_disposition"
     },
     "TESS": {
+        "id":"toi",
         "period": "pl_orbper",
         "duration": "pl_trandurh",
         "depth": "pl_trandep",

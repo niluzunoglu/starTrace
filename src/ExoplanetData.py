@@ -13,22 +13,48 @@ class ExoplanetData:
         self.observation_source = observation_source
         self.df = self._load_data()
         self.target_column = "disposition"  
+        self.df = self._clean_data(self.df)
 
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
-        df = self._rename_columns(df)  
-        print(f"Veri kaynağı: {self.observation_source}")
-        print("Son hali\n",df.head())
+        df = self._refactor_columns(df)  
         return df
 
-    def _rename_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+    def _refactor_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         mapping = COLUMN_MAPPING.get(str(self.observation_source))
         if mapping:
             existing_columns = set(df.columns)
-            rename_dict = {source_col: target_col for source_col, target_col in mapping.items() if source_col in existing_columns}
-            return df.rename(columns=rename_dict)
+            rename_dict = {target_col: source_col for source_col, target_col in mapping.items() if target_col in existing_columns}
+
+            # Sütun isimlerinin ortaklaştırılması
+            df = df.rename(columns=rename_dict)
+            # Verilen sütun isimleri dışında kalan sütunların silinmesi.
+            filtered_df = df[list(rename_dict.values())]
+            print("Filtered dataframe : \n", filtered_df)
+
+            if 'disposition' in df.columns:
+                print("Disposition sütunundaki unique değerler:", df['disposition'].unique())
+
+            return filtered_df
+        
         else:
             raise ValueError(f"Bilinmeyen gözlem kaynağı: {self.observation_source}")
+        
+    def _clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
+
+        if str(self.observation_source).lower() == "tess":
+
+            # Known planet, Ambigious Planet Candidate ve False Alarmları sil.
+            df = df[~df["disposition"].isin(["KP", "APC", "FA"])].copy()
+
+            # 2. Geri kalanları yeniden adlandır
+            df["disposition"] = df["disposition"].replace({
+                "PC": "CANDIDATE",
+                "FP": "FALSE POSITIVE",
+                "CP": "CONFIRMED"
+            })
+
+        return df
 
     def show_head(self, n: int = 5):
         print(self.df.head(n))
@@ -121,15 +147,13 @@ def merge_dataframes(df1: pd.DataFrame, df2: pd.DataFrame,
 if __name__ == "__main__":
 
     try:
-        kepler_type = ObservationSource.KEPLER
-        kepler_data = ExoplanetData(KEPLER_CSV_PATH, kepler_type)
+        kepler_data = ExoplanetData(KEPLER_CSV_PATH, ObservationSource.KEPLER)
         #print("\nKepler Verisi Özeti:")
         #kepler_data.show_head()
         kepler_data.show_target_distribution()
         #print(kepler_data.get_columns())
 
-        tess_type = ObservationSource.TESS
-        tess_data = ExoplanetData(TESS_CSV_PATH, tess_type)
+        tess_data = ExoplanetData(TESS_CSV_PATH, ObservationSource.TESS)
         #print("\nTESS Verisi Özeti:")
         #tess_data.show_head()
         tess_data.show_target_distribution()
