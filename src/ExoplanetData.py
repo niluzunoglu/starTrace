@@ -27,8 +27,9 @@ class ExoplanetData:
     def _load_data(self) -> pd.DataFrame:
         df = pd.read_csv(self.file_path, comment='#')
 
-        if(self.observation_source)
-        df = self._refactor_columns(df)  
+        if(self.observation_source != ObservationSource.MERGED):
+            df = self._refactor_columns(df)  
+        
         return df
 
     def _refactor_columns(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -67,13 +68,15 @@ class ExoplanetData:
 
         return df
     
+    def update_data(self, df: pd.DataFrame): 
+        self.df = df
+
     def show(self, max_rows: int = 10):
 
         pd.set_option('display.max_columns', None)
         print("\n🔭 {} Exoplanet Verisi (ilk {} satır):\n".format(str(self.observation_source), max_rows))
         print(tabulate(self.df.head(max_rows), headers='keys', tablefmt='fancy_grid', showindex=False))
         print(f"\n📏 Toplam Satır: {len(self.df)} | Sütun: {len(self.df.columns)}")
-
 
     def show_head(self, n: int = 5):
         print(self.df.head(n))
@@ -156,7 +159,6 @@ class ExoplanetData:
             print("CANDIDATE etiketli satırlar temizlendi.")
         else:
             print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
-
 
 def merge_exoplanet_data(data1: ExoplanetData, data2: ExoplanetData, common_columns:list, output_path: str) -> pd.DataFrame:
     """

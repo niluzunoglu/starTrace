@@ -22,7 +22,7 @@ class ExoplanetModelTrainer:
                  feature_columns: list = ['koi_period', 'koi_depth', 'koi_impact', 'koi_duration', 'koi_steff', 'koi_srad'],
                  test_size: float = 0.2, validation_size: float = 0.2, random_state: int = 42,
                  hidden_layer_sizes: tuple = (100,), activation: str = 'relu', solver: str = 'adam', learning_rate: str = 'constant',
-                 learning_rate_init: float = 0.001, max_iter: int = 300, output_dir: str = "../reports"):
+                 learning_rate_init: float = 0.001, max_iter: int = 300, output_dir: str = "../reports", use_feature_extraction: bool = False):
 
         self.df = dataframe
         self.target_column = target_column
@@ -40,6 +40,7 @@ class ExoplanetModelTrainer:
         self.learning_rate = learning_rate
         self.learning_rate_init = learning_rate_init
         self.max_iter = max_iter
+        self.use_feature_extraction = use_feature_extraction
         self.output_dir = output_dir
         self.timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.run_dir = os.path.join(self.output_dir, self.timestamp)
@@ -57,21 +58,31 @@ class ExoplanetModelTrainer:
         self.test_accuracies = []
         
     def _prepare_data(self) -> tuple:
-        X = pd.DataFrame(index=self.df.df.index)
 
-        if self.use_statistical:
-            X = X.join(self.df.extract_statistical_features(self.feature_columns))
-        if self.use_fourier:
-            X = X.join(self.df.extract_fourier_features(self.feature_columns))
-        if self.use_wavelet:
-            X = X.join(self.df.extract_wavelet_features(self.feature_columns))
-        if self.use_manual:
-            X = X.join(self.df.extract_manual_features())
-        
-        imputer = SimpleImputer(strategy='mean')
-        X = imputer.fit_transform(X)
+        if self.use_feature_extraction:
 
-        y = self.df.df[self.target_column]
+            X = pd.DataFrame(index=self.df.index)
+            print("X \n",X.head())
+
+            if self.use_statistical:
+                X = X.join(self.df.extract_statistical_features(self.feature_columns))
+            if self.use_fourier:
+                X = X.join(self.df.extract_fourier_features(self.feature_columns))
+            if self.use_wavelet:
+                X = X.join(self.df.extract_wavelet_features(self.feature_columns))
+            if self.use_manual:
+                X = X.join(self.df.extract_manual_features())
+            
+            imputer = SimpleImputer(strategy='mean')
+            X = imputer.fit_transform(X)
+
+        X = self.df.drop([self.target_column, "id"], axis=1)
+    
+        y = self.df[self.target_column]
+        print("y \n", y.head())
+
+        print("✅ X (özellikler) boyutu:", len(X))
+        print("✅ y (etiketler) boyutu:", len(y))
 
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=self.test_size, random_state=self.random_state, shuffle=False)
         X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=self.validation_size / (1 - self.test_size), random_state=self.random_state, shuffle = False)
@@ -195,8 +206,8 @@ if __name__ == "__main__":
         
         data = merged_exoplanet_data.get_dataframe_with_columns([target_column] + feature_columns)
         data = data.dropna()
-
-        data.show_target_distribution(target_column)
+        merged_exoplanet_data.update_data(data)
+        merged_exoplanet_data.show_target_distribution()
 
         data[target_column] = data[target_column].astype('category').cat.codes
 
@@ -210,12 +221,13 @@ if __name__ == "__main__":
                                         test_size=0.2, 
                                         validation_size=0.2, 
                                         random_state=42,
-                                        hidden_layer_sizes=(64,32,64),
+                                        hidden_layer_sizes=(128,64),
                                         activation='relu', 
                                         solver='adam', 
                                         learning_rate='adaptive',
-                                        learning_rate_init=0.001, 
-                                        max_iter=500)
+                                        learning_rate_init=0.01, 
+                                        max_iter=500,
+                                        use_feature_extraction=False)
 
         trainer.train_model()
 
