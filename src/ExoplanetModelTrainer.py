@@ -79,7 +79,6 @@ class ExoplanetModelTrainer:
         X = self.df.drop([self.target_column, "id"], axis=1)
     
         y = self.df[self.target_column]
-        print("y \n", y.head())
 
         print("✅ X (özellikler) boyutu:", len(X))
         print("✅ y (etiketler) boyutu:", len(y))
