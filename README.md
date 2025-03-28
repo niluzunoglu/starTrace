@@ -9,7 +9,9 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
 
 ## Veri Seti
 
-*   **Kaynak:** NASA Exoplanet Archive ([https://exoplanetarchive.ipac.caltech.edu/](https://exoplanetarchive.ipac.caltech.edu/)) adresinde bulunan Kepler KOI tablosu.
+*   **Kaynak:** 
+    * Transit geçiş bilgileri için NASA Exoplanet Archive ([https://exoplanetarchive.ipac.caltech.edu/](https://exoplanetarchive.ipac.caltech.edu/)) adresinde bulunan Kepler KOI ve TESS TOI tabloları kullanılmıştır.
+    * Işık eğrileri (light curve) için MAST STSCI (https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html) adresinde bulunan veriler kullanılmıştır.
 *   **Veri Tipi:** Işık eğrisi verileri (Zaman serisi)
 *   **Özellikler:** Proje, ham ışık eğrisi verilerinden çıkarılan çeşitli özellikleri kullanabilir. Bu özellikler şunları içerebilir:
     *   Akı (Flux) değerleri
