@@ -40,3 +40,20 @@ class LightCurveData:
         if self.lc:
             df = self.lc.to_pandas()
             df.to_csv(filename, index=False)
+
+if __name__ == "__main__":
+    target = "Kepler-8"
+    author = "Kepler"
+    cadence = "long"
+
+    lcdata = LightCurveData(target_name=target, author=author, cadence=cadence)
+    print("Arama Sonucu:")
+    print(lcdata.describe_search_result())
+
+    lcdata.download_lightcurve()
+    lcdata.normalize()
+    lcdata.remove_outliers()
+    lcdata.flatten()
+    lcdata.plot()
+    lcdata.save_csv(f"{target.replace('-', '_')}_lightcurve.csv")
+    print(f"{target} ışık eğrisi başarıyla kaydedildi.")
