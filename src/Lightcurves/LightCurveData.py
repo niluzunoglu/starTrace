@@ -41,19 +41,33 @@ class LightCurveData:
             df = self.lc.to_pandas()
             df.to_csv(filename, index=False)
 
+
+def process_targets(target_list, author="Kepler", cadence="long", output_dir="lightcurves"):
+    os.makedirs(output_dir, exist_ok=True)
+    for target in target_list:
+        try:
+            print(f"İşleniyor: {target}")
+            lc = LightCurveData(target, author=author, cadence=cadence)
+            if len(lc.describe_search_result()) == 0:
+                print(f"Uyarı: {target} için veri bulunamadı.")
+                continue
+            lc.download_lightcurve()
+            lc.normalize()
+            lc.remove_outliers()
+            lc.flatten()
+            save_path = os.path.join(output_dir, f"{target.replace('-', '_')}.csv")
+            lc.save_csv(save_path)
+            print(f"{target} başarıyla kaydedildi → {save_path}")
+        except Exception as e:
+            print(f"Hata: {target} işlenemedi. Sebep: {e}")
+
 if __name__ == "__main__":
-    target = "Kepler-8"
-    author = "Kepler"
-    cadence = "long"
+    target_ids = [
+        "Kepler-8",
+        "Kepler-10",
+        "Kepler-22"
+    ]
 
-    lcdata = LightCurveData(target_name=target, author=author, cadence=cadence)
-    print("Arama Sonucu:")
-    print(lcdata.describe_search_result())
-
-    lcdata.download_lightcurve()
-    lcdata.normalize()
-    lcdata.remove_outliers()
-    lcdata.flatten()
-    lcdata.plot()
-    lcdata.save_csv(f"{target.replace('-', '_')}_lightcurve.csv")
-    print(f"{target} ışık eğrisi başarıyla kaydedildi.")
+    # Kepler için: author="Kepler", cadence="long"
+    # TESS için: author="SPOC" veya "QLP", cadence="short" genellikle
+    process_targets(target_ids, author="Kepler", cadence="long")
