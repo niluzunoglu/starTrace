@@ -28,8 +28,9 @@ class ExoplanetData:
         df = pd.read_csv(self.file_path, comment='#')
 
         if(self.observation_source != ObservationSource.MERGED):
-            df = self._refactor_columns(df)  
-        
+            df = self._refactor_columns(df)
+            df["source"] = str(self.observation_source).lower()
+
         return df
 
     def _refactor_columns(self, df: pd.DataFrame) -> pd.DataFrame:
