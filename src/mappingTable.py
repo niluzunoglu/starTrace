@@ -11,7 +11,9 @@ COLUMN_MAPPING = {
         "model_snr": "koi_model_snr",
         "ra": "ra",
         "dec": "dec",
-        "disposition": "koi_disposition"
+        "disposition": "koi_disposition",
+        "source":"source"
+
     },
     "TESS": {
         "id":"toi",
@@ -24,7 +26,8 @@ COLUMN_MAPPING = {
         "model_snr": "pl_eqt", 
         "ra": "ra",
         "dec": "dec",
-        "disposition": "tfopwg_disp"
+        "disposition": "tfopwg_disp",
+        "source":"source"
     }
 }
 
