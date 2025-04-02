@@ -1,12 +1,10 @@
 import pandas as pd
 import numpy as np
 import pywt
+import os
 from tabulate import tabulate
 
 from scipy.fft import fft
-from Constants import KEPLER_CSV_PATH, TESS_CSV_PATH
-from mappingTable import COLUMN_MAPPING
-from ObservationSource import ObservationSource
 
 class ExoplanetData:
 
@@ -16,7 +14,7 @@ class ExoplanetData:
         self.file_path = file_path
         self.observation_source = observation_source
         self.df = self._load_data()
-        self.target_column = "disposition" 
+        self.target_column = "disposition"
         print("[Data] Obje oluşturuldu..")
 
         if(self.observation_source != ObservationSource.MERGED):
@@ -25,7 +23,7 @@ class ExoplanetData:
             self.df["id"] = self.df["id"].astype(str)
 
     def _load_data(self) -> pd.DataFrame:
-        df = pd.read_csv(self.file_path, comment='#')
+        df = pd.read_csv(self.file_path, comment='#', dtype={"id": str})
 
         if(self.observation_source != ObservationSource.MERGED):
             df = self._refactor_columns(df)
@@ -49,10 +47,10 @@ class ExoplanetData:
             #    print("Disposition sütunundaki unique değerler:", df['disposition'].unique())
             self.common_columns = filtered_df.columns
             return filtered_df
-        
+
         else:
             raise ValueError(f"Bilinmeyen gözlem kaynağı: {self.observation_source}")
-        
+
     def _clean_data(self, df: pd.DataFrame) -> pd.DataFrame:
 
         if self.observation_source == ObservationSource.TESS:
@@ -68,8 +66,8 @@ class ExoplanetData:
             })
 
         return df
-    
-    def update_data(self, df: pd.DataFrame): 
+
+    def update_data(self, df: pd.DataFrame):
         self.df = df
 
     def show(self, max_rows: int = 10):
@@ -87,7 +85,7 @@ class ExoplanetData:
 
     def filter_by_disposition(self, disposition: str) -> pd.DataFrame:
         return self.df[self.df[self.target_column] == disposition]
-    
+
     def get_columns(self) -> list:
         return list(self.df.columns)
 
@@ -136,8 +134,8 @@ class ExoplanetData:
     def extract_manual_features(self) -> pd.DataFrame:
         feature_df = pd.DataFrame(index=self.df.index)
 
-        period_col = "period"  
-        depth_col = "depth"   
+        period_col = "period"
+        depth_col = "depth"
         steff_col = "steff"
 
         if period_col in self.df.columns and depth_col in self.df.columns:
@@ -153,7 +151,7 @@ class ExoplanetData:
             print(self.df[self.target_column].value_counts())
         else:
             print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
-    
+
     def remove_candidates(self):
         if self.target_column in self.df.columns:
             self.df = self.df[self.df[self.target_column] != 'CANDIDATE'] #Buraya Kanditat olup olmama durumunu nasıl yapacaz
@@ -161,9 +159,16 @@ class ExoplanetData:
         else:
             print(f"Hata: '{self.target_column}' sütunu bulunamadı.")
 
+    def clean_id_column(self):
+        if "id" in self.df.columns:
+            self.df = self.df.drop(columns=["id"])
+            print("🗑️ 'id' sütunu silindi.")
+        else:
+            print("⚠️ 'id' sütunu bulunamadı, silme işlemi yapılmadı.")
+
 def merge_exoplanet_data(data1: ExoplanetData, data2: ExoplanetData, common_columns:list, output_path: str) -> pd.DataFrame:
     """
-    İki ExoplanetData nesnesinin verisini (df) ortak sütunlara göre birleştirir 
+    İki ExoplanetData nesnesinin verisini (df) ortak sütunlara göre birleştirir
     ve sonucu belirtilen dosya yoluna kaydeder.
 
     Args:
@@ -193,14 +198,16 @@ def merge_exoplanet_data(data1: ExoplanetData, data2: ExoplanetData, common_colu
 if __name__ == "__main__":
 
     try:
-        kepler_data = ExoplanetData(KEPLER_CSV_PATH, ObservationSource.KEPLER)
+        current_path = os.getcwd()
+        print("Current working directory:", current_path)
+        kepler_data = ExoplanetData("/content/drive/MyDrive/starTrace/data/multimission/KEPLER/cumulative.csv", ObservationSource.KEPLER)
         #print("\nKepler Verisi Özeti:")
         #kepler_data.show_head()
         kepler_data.show_target_distribution()
         kepler_data.show()
         #print(kepler_data.get_columns())
 
-        tess_data = ExoplanetData(TESS_CSV_PATH, ObservationSource.TESS)
+        tess_data = ExoplanetData("/content/drive/MyDrive/starTrace/data/multimission/TESS/TOI_2025.03.23_03.49.58.csv", ObservationSource.TESS)
         #print("\nTESS Verisi Özeti:")
         #tess_data.show_head()
         tess_data.show_target_distribution()
@@ -208,15 +215,15 @@ if __name__ == "__main__":
         #print(tess_data.get_columns())
 
         common_columns = list(COLUMN_MAPPING.get(str(ObservationSource.TESS)).keys())
-        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path="../data/multimission/MERGED/kepler_and_tess.csv")
+        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path="/content/drive/MyDrive/starTrace/data/multimission/MERGED/kepler_and_tess_from_colab.csv")
 
 
 
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")
-    
+
     except pd.errors.ParserError:
         print(f"Error: Could not parse the file -> {KEPLER_CSV_PATH}")
-    
+
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
