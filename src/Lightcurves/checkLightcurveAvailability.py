@@ -8,7 +8,7 @@ def check_lightcurve_availability(csv_path):
     total = len(df)
 
     for i, row in df.iterrows():
-        target_id = int(row["id"])
+        target_id = str(row["id"])
         source = str(row["source"]).lower().strip()
 
         #kepid = int(row["kepid"])  # float değil!
@@ -18,13 +18,14 @@ def check_lightcurve_availability(csv_path):
         if source == "kepler":
             author = "Kepler"
         elif source == "tess":
-            author = "SPOC"
+            author = "TESS"
+            target_id = "TOI-"+target_id
         else:
             print(f"[{target_id}] Bilinmeyen kaynak: {source}")
             continue
 
         try:
-            print(f"🔍 İşık Eğrisi Arama: {target_id} - {author}")
+            print(f"🔍 {i}. Işık Eğrisi Arama: {target_id} - {author}")
             search_result = search_lightcurve(target_id, author=author)
             if len(search_result) > 0:
                 count_found += 1
