@@ -8,6 +8,10 @@ def check_lightcurve_availability(csv_path):
     total = len(df)
 
     for i, row in df.iterrows():
+        
+        if i >= 100:
+            break
+            
         target_id = str(row["id"])
         source = str(row["source"]).lower().strip()
 
