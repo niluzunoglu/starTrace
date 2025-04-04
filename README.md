@@ -19,6 +19,17 @@ StarTrace, NASA Exoplanet Archive'dan alınan verileri kullanarak ötegezegen ge
     *   Geçiş derinliği (Transit depth)
     *   Geçiş süresi (Transit duration)
     *   Diğer istatistiksel özellikler
+ 
+ ## 📊 Ötegezegen Veri Dağılımı
+
+Toplamda **14,649** ışık eğrisi girdisi mevcuttur. Veriler **Kepler** ve **TESS** görevlerinden gelmektedir.
+
+| Kaynak  | CONFIRMED | CANDIDATE | FALSE POSITIVE | Toplam |
+|---------|-----------|-----------|----------------|--------|
+| **Kepler** | 1,942     | 1,632     | 4,640          | 8,214  |
+| **TESS**   | 490       | 4,806     | 1,137          | 6,435  |
+| **Genel Toplam** | **2,432**   | **6,438**   | **5,777**        | **14,649** |
+
 
 ## Kullanılan Teknolojiler
 
