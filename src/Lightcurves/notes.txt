@@ -4,3 +4,13 @@
 4️⃣	Sabit uzunlukta ışık eğrisi oluşturma
 5️⃣	Etiketlerin CONFIRMED / CANDIDATE / FALSE POSITIVE olarak atanması
 6️⃣	1D CNN ya da LSTM ile model eğitilmesi
+
+Veri Dağılımı:
+toplam 14649 entry var. 
+bunlardan 8214 tanesi kepler. 6435 tanesi de tess.
+
+keplerde Confirmed - Candidate - False Positive sayısı şöyle:
+1942, 1632, 4640 
+
+TESS için Confirmed - Candidate - False Positive :
+490, 4806, 1137 
