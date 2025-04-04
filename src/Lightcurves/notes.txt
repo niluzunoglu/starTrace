@@ -1,0 +1,6 @@
+1️⃣	Etiketli yıldız listesinin oluşturulması (TOI veya Kepler ID’leri + label’lar)
+2️⃣	Işık eğrilerinin indirilmesi
+3️⃣	Temizleme, detrend, normalization işlemleri
+4️⃣	Sabit uzunlukta ışık eğrisi oluşturma
+5️⃣	Etiketlerin CONFIRMED / CANDIDATE / FALSE POSITIVE olarak atanması
+6️⃣	1D CNN ya da LSTM ile model eğitilmesi
