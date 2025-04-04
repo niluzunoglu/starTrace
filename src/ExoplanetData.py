@@ -3,7 +3,6 @@ import numpy as np
 import pywt
 import os
 from tabulate import tabulate
-
 from scipy.fft import fft
 
 class ExoplanetData:
@@ -166,6 +165,28 @@ class ExoplanetData:
         else:
             print("⚠️ 'id' sütunu bulunamadı, silme işlemi yapılmadı.")
 
+    def generate_lightcurve_source_csv(self, output_path: str):
+        """
+        Işık eğrisi indirmek ve model eğitimi için gerekli minimal veri formatını oluşturur.
+        ['id', 'disposition' (label), 'period', 'source'] sütunları alınır.
+
+        Args:
+            output_path (str): CSV olarak kaydedilecek dosya yolu.
+        """
+        required_columns = ["id", "disposition", "period", "source"]
+
+        # Mevcut olanları kontrol et
+        existing_cols = [col for col in required_columns if col in self.df.columns]
+
+        if len(existing_cols) < 4:
+            print(f"⚠️ Gerekli sütunlardan bazıları eksik: {required_columns}")
+            return
+
+        df_out = self.df[required_columns].copy()
+        df_out = df_out.rename(columns={"disposition": "label"})
+        df_out.to_csv(output_path, index=False)
+        print(f"✅ Lightcurve CSV dosyası oluşturuldu: {output_path}")
+
 def merge_exoplanet_data(data1: ExoplanetData, data2: ExoplanetData, common_columns:list, output_path: str) -> pd.DataFrame:
     """
     İki ExoplanetData nesnesinin verisini (df) ortak sütunlara göre birleştirir
@@ -200,14 +221,14 @@ if __name__ == "__main__":
     try:
         current_path = os.getcwd()
         print("Current working directory:", current_path)
-        kepler_data = ExoplanetData("/content/drive/MyDrive/starTrace/data/multimission/KEPLER/cumulative.csv", ObservationSource.KEPLER)
+        kepler_data = ExoplanetData(KEPLER_COLAB_DATA_PATH, ObservationSource.KEPLER)
         #print("\nKepler Verisi Özeti:")
         #kepler_data.show_head()
         kepler_data.show_target_distribution()
         kepler_data.show()
         #print(kepler_data.get_columns())
 
-        tess_data = ExoplanetData("/content/drive/MyDrive/starTrace/data/multimission/TESS/TOI_2025.03.23_03.49.58.csv", ObservationSource.TESS)
+        tess_data = ExoplanetData(TESS_COLAB_DATA_PATH, ObservationSource.TESS)
         #print("\nTESS Verisi Özeti:")
         #tess_data.show_head()
         tess_data.show_target_distribution()
@@ -215,9 +236,7 @@ if __name__ == "__main__":
         #print(tess_data.get_columns())
 
         common_columns = list(COLUMN_MAPPING.get(str(ObservationSource.TESS)).keys())
-        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path="/content/drive/MyDrive/starTrace/data/multimission/MERGED/kepler_and_tess_from_colab.csv")
-
-
+        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path=MERGED_COLAB_DATA_PATH)
 
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")
