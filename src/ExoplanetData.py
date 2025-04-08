@@ -5,6 +5,10 @@ import os
 from tabulate import tabulate
 from scipy.fft import fft
 
+from ObservationSource import ObservationSource
+from mappingTable import COLUMN_MAPPING
+from Constants import TESS_CSV_PATH, KEPLER_CSV_PATH, MERGED_CSV_PATH
+
 class ExoplanetData:
 
     def __init__(self, file_path: str, observation_source: ObservationSource = ObservationSource.KEPLER):
@@ -221,14 +225,14 @@ if __name__ == "__main__":
     try:
         current_path = os.getcwd()
         print("Current working directory:", current_path)
-        kepler_data = ExoplanetData(KEPLER_COLAB_DATA_PATH, ObservationSource.KEPLER)
+        kepler_data = ExoplanetData(KEPLER_CSV_PATH, ObservationSource.KEPLER)
         #print("\nKepler Verisi Özeti:")
         #kepler_data.show_head()
         kepler_data.show_target_distribution()
         kepler_data.show()
         #print(kepler_data.get_columns())
 
-        tess_data = ExoplanetData(TESS_COLAB_DATA_PATH, ObservationSource.TESS)
+        tess_data = ExoplanetData(TESS_CSV_PATH, ObservationSource.TESS)
         #print("\nTESS Verisi Özeti:")
         #tess_data.show_head()
         tess_data.show_target_distribution()
@@ -236,7 +240,7 @@ if __name__ == "__main__":
         #print(tess_data.get_columns())
 
         common_columns = list(COLUMN_MAPPING.get(str(ObservationSource.TESS)).keys())
-        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path=MERGED_COLAB_DATA_PATH)
+        merge_exoplanet_data(kepler_data, tess_data, common_columns=common_columns, output_path=MERGED_CSV_PATH)
 
     except FileNotFoundError:
         print(f"Error: File not found -> {KEPLER_CSV_PATH}")
