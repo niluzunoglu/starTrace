@@ -1,7 +1,6 @@
 # ✨StarTrace: Derin Öğrenme Metodları ile Ötegezegen Tespiti 🚀
 
-![Ötegezegen Görseli](assets/Kepler.jpg)
-Kepler Uzay Teleskobu (2009-2018)
+![Startrace Proje Görseli](assets/starTrace.jpg)
 
 ## Proje Tanımı
 
